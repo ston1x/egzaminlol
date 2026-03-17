@@ -4,7 +4,7 @@
 
 'use strict';
 
-const XLSX = require('xlsx');
+const ExcelJS = require('exceljs');
 const path = require('path');
 const fs = require('fs');
 
@@ -17,15 +17,34 @@ if (!fs.existsSync(xlsxPath)) {
   process.exit(1);
 }
 
-const wb = XLSX.readFile(xlsxPath);
-const ws = wb.Sheets['katalog'];
+async function main() {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(xlsxPath);
 
-if (!ws) {
-  console.error(`ERROR: Sheet "katalog" not found in ${xlsxPath}`);
-  console.error(`Available sheets: ${wb.SheetNames.join(', ')}`);
-  process.exit(1);
+  const ws = workbook.getWorksheet('katalog');
+  if (!ws) {
+    const names = workbook.worksheets.map(s => s.name).join(', ');
+    console.error(`ERROR: Sheet "katalog" not found. Available sheets: ${names}`);
+    process.exit(1);
+  }
+
+  const colCount = ws.columnCount;
+  const lines = [];
+
+  ws.eachRow({ includeEmpty: true }, (row) => {
+    const cells = [];
+    for (let i = 1; i <= colCount; i++) {
+      const val = String(row.getCell(i).text ?? '').replace(/[\n\r]/g, ' ');
+      cells.push(val);
+    }
+    lines.push(cells.join(';'));
+  });
+
+  fs.writeFileSync(csvPath, lines.join('\n'), 'utf8');
+  console.log(`Written: ${csvPath}`);
 }
 
-const csv = XLSX.utils.sheet_to_csv(ws, { FS: ';' });
-fs.writeFileSync(csvPath, csv, 'utf8');
-console.log(`Written: ${csvPath}`);
+main().catch(err => {
+  console.error('ERROR:', err.message);
+  process.exit(1);
+});
