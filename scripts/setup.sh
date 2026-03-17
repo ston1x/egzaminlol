@@ -5,7 +5,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SOURCE="$ROOT/source"
+SOURCE="$ROOT/tmp"
 
 echo "==> egzaminlol setup"
 echo "    Project root: $ROOT"
@@ -20,9 +20,15 @@ check_cmd() {
   fi
 }
 
-check_cmd wget   "Install with: brew install wget"
-check_cmd unzip  "Install with: brew install unzip"
+check_cmd wget   "Install with: brew install wget  / sudo apt install wget"
+check_cmd unzip  "Install with: brew install unzip / sudo apt install unzip"
 check_cmd node   "Install from https://nodejs.org"
+check_cmd npm    "Install from https://nodejs.org"
+
+# ── Install npm dependencies (needed for xlsx conversion) ────
+
+echo "==> Installing npm dependencies..."
+npm install --prefix "$ROOT" --silent
 
 # ── Directory setup ─────────────────────────────────────────
 
@@ -47,9 +53,10 @@ echo "==> Downloading multimedia part 2..."
 wget -q --show-progress -O multimedia_do_pytan_cz2.zip \
   "https://www.gov.pl/attachment/546279d3-2586-41e2-8912-3f5cab98d31d"
 
-echo "==> Downloading sign language videos (~10 GB)..."
-wget -q --show-progress -O pytania_tlumaczenia_migowe.zip \
-  "https://www.gov.pl/pliki/mi/pytania_egzaminacyjne_na_prawo_jazdy_tlumaczenia_migowe_12_2025.zip"
+# Temporarily commented until figured out
+# echo "==> Downloading sign language videos (~10 GB)..."
+# wget -q --show-progress -O pytania_tlumaczenia_migowe.zip \
+#   "https://www.gov.pl/pliki/mi/pytania_egzaminacyjne_na_prawo_jazdy_tlumaczenia_migowe_12_2025.zip"
 
 # ── Unzip ─────────────────────────────────────────────────────
 
@@ -60,9 +67,10 @@ unzip -q -o multimedia_do_pytan.zip -d "multimedia do pytań"
 echo "==> Unzipping multimedia part 2..."
 unzip -q -o multimedia_do_pytan_cz2.zip -d "cz. 2"
 
-echo "==> Unzipping sign language videos..."
-unzip -q -o pytania_tlumaczenia_migowe.zip \
-  -d "Pytania egzaminacyjne na prawo jazdy - tłumaczenia migowe 2025"
+# Temporarily commented until figured out
+# echo "==> Unzipping sign language videos..."
+# unzip -q -o pytania_tlumaczenia_migowe.zip \
+#   -d "Pytania egzaminacyjne na prawo jazdy - tłumaczenia migowe 2025"
 
 # ── Convert xlsx → CSV ────────────────────────────────────────
 
@@ -74,4 +82,4 @@ node "$ROOT/scripts/xlsx-to-csv.js" "$SOURCE"
 
 echo ""
 echo "==> Done! Source files ready."
-echo "    Run 'npm install && npm start' to launch the app."
+echo "    Run 'npm start' to launch the app."
