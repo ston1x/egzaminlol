@@ -6,13 +6,25 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const { getQuestions, getRandomQuestion, getQuestionByNumber } = require('./questions');
 
-const MEDIA_DIR = path.join(__dirname, '..', 'source', 'multimedia do pytań');
+const MEDIA_DIRS = [
+  path.join(__dirname, '..', 'source', 'multimedia do pytań'),
+  path.join(__dirname, '..', 'source', 'cz. 2'),
+];
 const CACHE_DIR = path.join(__dirname, '..', 'cache');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 const PORT = process.env.PORT || 3000;
 
 // Ensure cache directory exists
 if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR);
+
+// Returns the full path to a media file, searching all media directories in order
+function findMediaFile(filename) {
+  for (const dir of MEDIA_DIRS) {
+    const p = path.join(dir, filename);
+    if (fs.existsSync(p)) return p;
+  }
+  return null;
+}
 
 // Tracks in-progress transcodes: filename -> Promise
 const transcoding = new Map();
@@ -29,8 +41,8 @@ app.get('/media/video/:filename', async (req, res) => {
     return res.status(400).json({ error: 'Invalid filename' });
   }
 
-  const srcPath = path.join(MEDIA_DIR, filename);
-  if (!fs.existsSync(srcPath)) {
+  const srcPath = findMediaFile(filename);
+  if (!srcPath) {
     return res.status(404).json({ error: 'Video file not found' });
   }
 
@@ -100,8 +112,8 @@ app.get('/media/:filename', (req, res) => {
   if (filename.includes('/') || filename.includes('..')) {
     return res.status(400).json({ error: 'Invalid filename' });
   }
-  const filepath = path.join(MEDIA_DIR, filename);
-  if (!fs.existsSync(filepath)) {
+  const filepath = findMediaFile(filename);
+  if (!filepath) {
     return res.status(404).json({ error: 'Media file not found' });
   }
   res.sendFile(filepath);

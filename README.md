@@ -6,20 +6,37 @@ Free, self-hosted Polish driving theory exam practice app (Category B).
 
 - **Node.js** v18+
 - **ffmpeg** — required for WMV video playback (`brew install ffmpeg` on macOS)
-- The official source files from [gov.pl](https://www.gov.pl/web/infrastruktura/prawo-jazdy) placed in `source/`
+- The official source files from [gov.pl](https://www.gov.pl/web/infrastruktura/prawo-jazdy) placed in `source/`:
+
+```
+wget https://www.gov.pl/attachment/048efa83-ab53-48df-be75-45d71dc53721; wget https://www.gov.pl/pliki/mi/multimedia_do_pytan.zip; wget https://www.gov.pl/attachment/546279d3-2586-41e2-8912-3f5cab98d31d; wget https://www.gov.pl/pliki/mi/pytania_egzaminacyjne_na_prawo_jazdy_tlumaczenia_migowe_12_2025.zip
+```
 
 ## Source files setup
 
-The `source/` directory is not included in this repo (files are large and have licensing constraints). Download them from the official government page and arrange like this:
+The `source/` directory is not included in this repo (files are large and have licensing constraints).
+
+**Automatic setup (recommended):**
+
+```bash
+bash scripts/setup.sh
+```
+
+The script downloads all files from [gov.pl](https://www.gov.pl/web/infrastruktura/prawo-jazdy), unzips them, and converts the xlsx catalogue to CSV. Requires `wget`, `unzip`, and `node` (already needed to run the app).
+
+**Manual setup** — download and arrange like this:
 
 ```
 source/
-├── katalog-Table 1.csv               # converted from the .xlsx question catalogue, Use ";" as separator
-├── multimedia do pytań/              # unzipped multimedia_do_pytan.zip (~8 GB)
+├── katalog-Table 1.csv                          # converted from xlsx (sheet "katalog", ";" separator)
+├── multimedia do pytań/                         # unzipped multimedia_do_pytan.zip (~8 GB)
+│   ├── *.jpg
+│   └── *.wmv
+├── cz. 2/                                       # unzipped part 2 attachment (~small)
 │   ├── *.jpg
 │   └── *.wmv
 └── Pytania egzaminacyjne na prawo jazdy - tłumaczenia migowe 2025/
-    └── *.wmv                         # sign language videos (not used yet)
+    └── *.wmv                                    # sign language videos (not used yet)
 ```
 
 ## Installation
