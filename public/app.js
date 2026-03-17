@@ -44,6 +44,20 @@ function loadState() {
   }
 }
 
+// ── Relative time ───────────────────────────────────────────
+
+function formatRelativeTime(timestamp) {
+  const secs = Math.floor((Date.now() - timestamp) / 1000);
+  if (secs < 60) return 'przed chwilą';
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) return `${mins} min temu`;
+  const hours = Math.floor(mins / 60);
+  const remainingMins = mins % 60;
+  if (hours < 24) return remainingMins > 0 ? `${hours}h ${remainingMins}m temu` : `${hours}h temu`;
+  const days = Math.floor(hours / 24);
+  return `${days}d temu`;
+}
+
 // ── DOM helpers ─────────────────────────────────────────────
 
 function el(id) { return document.getElementById(id); }
@@ -68,7 +82,9 @@ function renderStats() {
 function renderMedia(q) {
   const container = el('media-container');
   const img = el('media-img');
-  const video = el('video-placeholder');
+  const videoWrapper = el('video-wrapper');
+  const video = el('media-video');
+  const hint = el('video-hint');
 
   if (!q.media) {
     container.setAttribute('hidden', '');
@@ -80,10 +96,21 @@ function renderMedia(q) {
   if (q.mediaType === 'image') {
     img.src = `/media/${encodeURIComponent(q.media)}`;
     img.removeAttribute('hidden');
-    video.setAttribute('hidden', '');
+    videoWrapper.setAttribute('hidden', '');
   } else if (q.mediaType === 'video') {
     img.setAttribute('hidden', '');
-    video.removeAttribute('hidden');
+    videoWrapper.removeAttribute('hidden');
+
+    // Reset and load new source
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+
+    hint.removeAttribute('hidden');
+    video.src = `/media/video/${encodeURIComponent(q.media)}`;
+
+    // Hide hint once video is ready to play
+    video.addEventListener('canplay', () => hint.setAttribute('hidden', ''), { once: true });
   } else {
     container.setAttribute('hidden', '');
   }
@@ -167,6 +194,7 @@ function handleAnswer(userAnswer) {
       question,
       userAnswer,
       correctAnswer,
+      timestamp: Date.now(),
     });
   }
 
@@ -209,8 +237,9 @@ function renderMistakes() {
       ? m.question.slice(0, 87) + '…'
       : m.question;
 
+    const timeStr = m.timestamp ? formatRelativeTime(m.timestamp) : '';
     li.innerHTML = `
-      <div class="mistake-meta">Pytanie ${m.number}</div>
+      <div class="mistake-meta">Pytanie ${m.number}${timeStr ? ` · <span class="mistake-time">${timeStr}</span>` : ''}</div>
       <div>${truncated}</div>
       <div class="mistake-given">Twoja odpowiedź: ${ANSWER_LABELS[m.userAnswer]}</div>
       <div class="mistake-correct">✓ Poprawna: ${ANSWER_LABELS[m.correctAnswer]}</div>
@@ -237,6 +266,17 @@ function toggleMistakes() {
   }
 }
 
+// ── Reset stats ─────────────────────────────────────────────
+
+function resetStats() {
+  state.correct = 0;
+  state.wrong = 0;
+  state.mistakes = [];
+  localStorage.removeItem(STORAGE_KEY);
+  renderStats();
+  if (state.mistakesOpen) renderMistakes();
+}
+
 // ── Fetch & load question ───────────────────────────────────
 
 async function fetchQuestion() {
@@ -261,6 +301,7 @@ function init() {
 
   el('next-btn').addEventListener('click', fetchQuestion);
   el('mistakes-header').addEventListener('click', toggleMistakes);
+  el('reset-btn').addEventListener('click', resetStats);
 
   fetchQuestion();
 }

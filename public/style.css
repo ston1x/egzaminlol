@@ -1,5 +1,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Ensure hidden attribute always wins over display rules in CSS */
+[hidden] { display: none !important; }
+
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: #111318;
@@ -54,6 +57,25 @@ body {
   height: 36px;
   background: #2c3040;
   flex-shrink: 0;
+}
+
+#reset-btn {
+  background: none;
+  border: 1px solid #2c3040;
+  border-radius: 6px;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-family: inherit;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+#reset-btn:hover {
+  color: #f87171;
+  border-color: #f87171;
 }
 
 /* ── Layout ────────────────────────────────────────────────── */
@@ -112,23 +134,20 @@ body {
   border-radius: 8px;
 }
 
-#video-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #252a35;
-  border: 2px dashed #3a4050;
+#media-video {
+  width: 100%;
+  height: auto;
+  display: block;
   border-radius: 8px;
-  padding: 32px;
-  color: #6b7280;
-  font-size: 0.9rem;
+  background: #000;
 }
 
-#video-placeholder span {
-  font-size: 2rem;
-  opacity: 0.4;
+#video-hint {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
 }
 
 /* ── Answer buttons ────────────────────────────────────────── */
@@ -302,4 +321,10 @@ body {
 .mistake-given {
   color: #f87171;
   font-size: 0.8rem;
+}
+
+.mistake-time {
+  color: #4b5563;
+  font-size: 0.72rem;
+  margin-top: 2px;
 }

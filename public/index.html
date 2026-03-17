@@ -23,6 +23,7 @@
         <span class="stat-label">Suma</span>
         <span id="stat-total" class="stat-value total">0</span>
       </span>
+      <button id="reset-btn" title="Resetuj statystyki">Resetuj</button>
     </div>
   </header>
 
@@ -33,9 +34,9 @@
 
       <div id="media-container" hidden>
         <img id="media-img" src="" alt="Ilustracja do pytania">
-        <div id="video-placeholder" hidden>
-          <span>▶</span>
-          <p>Wideo dostępne w kolejnej wersji</p>
+        <div id="video-wrapper" hidden>
+          <video id="media-video" controls preload="auto"></video>
+          <p id="video-hint">Pierwsze uruchomienie może chwilę potrwać (konwersja wideo)…</p>
         </div>
       </div>
 
