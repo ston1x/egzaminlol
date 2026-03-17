@@ -17,6 +17,8 @@ const state = {
   answered: false,
   correct: 0,
   wrong: 0,
+  earnedPoints: 0,
+  totalPoints: 0,
   mistakes: [],
   mistakesOpen: false,
 };
@@ -27,6 +29,8 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     correct: state.correct,
     wrong: state.wrong,
+    earnedPoints: state.earnedPoints,
+    totalPoints: state.totalPoints,
     mistakes: state.mistakes,
   }));
 }
@@ -38,6 +42,8 @@ function loadState() {
     const saved = JSON.parse(raw);
     state.correct = saved.correct || 0;
     state.wrong = saved.wrong || 0;
+    state.earnedPoints = saved.earnedPoints || 0;
+    state.totalPoints = saved.totalPoints || 0;
     state.mistakes = Array.isArray(saved.mistakes) ? saved.mistakes : [];
   } catch (_) {
     // corrupted storage — start fresh
@@ -68,9 +74,34 @@ function hide(id) { el(id).setAttribute('hidden', ''); }
 // ── Stats rendering ─────────────────────────────────────────
 
 function renderStats() {
+  const total = state.correct + state.wrong;
   el('stat-correct').textContent = state.correct;
   el('stat-wrong').textContent = state.wrong;
-  el('stat-total').textContent = state.correct + state.wrong;
+  el('stat-total').textContent = total;
+
+  const ratioEl = el('stat-ratio');
+  if (total === 0) {
+    ratioEl.textContent = '—';
+    ratioEl.className = 'stat-value ratio';
+  } else {
+    const pct = Math.round((state.correct / total) * 100);
+    ratioEl.textContent = `${pct}%`;
+    ratioEl.className = 'stat-value ratio ' + (pct >= 80 ? 'ratio-good' : pct >= 60 ? 'ratio-ok' : 'ratio-bad');
+  }
+
+  const ptRatioEl = el('stat-points-ratio');
+  if (state.totalPoints === 0) {
+    el('stat-points-earned').textContent = '—';
+    el('stat-points-total').textContent = '—';
+    ptRatioEl.textContent = '—';
+    ptRatioEl.className = 'stat-value ratio';
+  } else {
+    const ptPct = Math.round((state.earnedPoints / state.totalPoints) * 100);
+    el('stat-points-earned').textContent = state.earnedPoints;
+    el('stat-points-total').textContent = state.totalPoints;
+    ptRatioEl.textContent = `${ptPct}%`;
+    ptRatioEl.className = 'stat-value ratio ' + (ptPct >= 80 ? 'ratio-good' : ptPct >= 60 ? 'ratio-ok' : 'ratio-bad');
+  }
 
   const badge = el('mistakes-count');
   badge.textContent = state.mistakes.length;
@@ -182,11 +213,13 @@ function handleAnswer(userAnswer) {
   if (state.answered) return;
   state.answered = true;
 
-  const { correctAnswer, number, question } = state.current;
+  const { correctAnswer, number, question, points } = state.current;
   const isCorrect = userAnswer === correctAnswer;
 
+  state.totalPoints += points;
   if (isCorrect) {
     state.correct++;
+    state.earnedPoints += points;
   } else {
     state.wrong++;
     state.mistakes.push({
@@ -321,6 +354,8 @@ function toggleMistakes() {
 function resetStats() {
   state.correct = 0;
   state.wrong = 0;
+  state.earnedPoints = 0;
+  state.totalPoints = 0;
   state.mistakes = [];
   localStorage.removeItem(STORAGE_KEY);
   renderStats();

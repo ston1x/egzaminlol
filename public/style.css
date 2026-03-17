@@ -48,14 +48,55 @@ body {
   line-height: 1.2;
 }
 
-.stat-value.correct { color: #4ade80; }
-.stat-value.wrong   { color: #f87171; }
-.stat-value.total   { color: #94a3b8; }
+.stat-value.correct    { color: #4ade80; }
+.stat-value.wrong      { color: #f87171; }
+.stat-value.total      { color: #94a3b8; }
+.stat-value.ratio      { color: #94a3b8; }
+.stat-value.ratio-good { color: #4ade80; }
+.stat-value.ratio-ok   { color: #fb923c; }
+.stat-value.ratio-bad  { color: #f87171; }
 
 .stat-divider {
   width: 1px;
   height: 36px;
   background: #2c3040;
+  flex-shrink: 0;
+}
+
+#stats-points-row {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 5px 16px 8px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #1e2330;
+}
+
+.stat-pt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.stat-pt-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #4b5563;
+}
+
+.stat-pt-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.stat-pt-divider {
+  width: 1px;
+  height: 20px;
+  background: #1e2330;
   flex-shrink: 0;
 }
 
