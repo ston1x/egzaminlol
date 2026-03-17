@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>egzamin.lol — Prawo jazdy kat. B</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header id="stats-bar">
+    <div id="stats-inner">
+      <span class="stat">
+        <span class="stat-label">Poprawne</span>
+        <span id="stat-correct" class="stat-value correct">0</span>
+      </span>
+      <span class="stat-divider"></span>
+      <span class="stat">
+        <span class="stat-label">Błędy</span>
+        <span id="stat-wrong" class="stat-value wrong">0</span>
+      </span>
+      <span class="stat-divider"></span>
+      <span class="stat">
+        <span class="stat-label">Suma</span>
+        <span id="stat-total" class="stat-value total">0</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div id="question-card" class="card">
+      <div id="question-meta"></div>
+      <p id="question-text"></p>
+
+      <div id="media-container" hidden>
+        <img id="media-img" src="" alt="Ilustracja do pytania">
+        <div id="video-placeholder" hidden>
+          <span>▶</span>
+          <p>Wideo dostępne w kolejnej wersji</p>
+        </div>
+      </div>
+
+      <div id="answer-buttons"></div>
+      <div id="feedback" hidden></div>
+      <button id="next-btn" hidden>Następne pytanie →</button>
+    </div>
+
+    <div id="mistakes-panel" class="card">
+      <button id="mistakes-header" aria-expanded="false">
+        <span>Błędy <span id="mistakes-count" class="mistakes-badge">0</span></span>
+        <span id="mistakes-chevron" class="chevron">▼</span>
+      </button>
+      <ul id="mistakes-list" hidden></ul>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
