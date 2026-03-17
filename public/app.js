@@ -195,6 +195,8 @@ function handleAnswer(userAnswer) {
       userAnswer,
       correctAnswer,
       timestamp: Date.now(),
+      media: state.current.media,
+      mediaType: state.current.mediaType,
     });
   }
 
@@ -213,6 +215,48 @@ function handleAnswer(userAnswer) {
 }
 
 // ── Mistakes panel ───────────────────────────────────────────
+
+function toggleMistakeMedia(btn) {
+  const wrap = btn.closest('li').querySelector('.mistake-media-wrap');
+  const isOpen = !wrap.hasAttribute('hidden');
+
+  if (isOpen) {
+    wrap.setAttribute('hidden', '');
+    // Pause video if present to stop buffering
+    const video = wrap.querySelector('video');
+    if (video) video.pause();
+    btn.classList.remove('expanded');
+    return;
+  }
+
+  // Lazily populate media on first open
+  if (!wrap.dataset.loaded) {
+    const { media, mediaType } = btn.dataset;
+    if (mediaType === 'image') {
+      const img = document.createElement('img');
+      img.src = `/media/${encodeURIComponent(media)}`;
+      img.className = 'mistake-media-img';
+      img.alt = 'Ilustracja do pytania';
+      wrap.appendChild(img);
+    } else if (mediaType === 'video') {
+      const video = document.createElement('video');
+      video.src = `/media/video/${encodeURIComponent(media)}`;
+      video.className = 'mistake-media-video';
+      video.controls = true;
+      video.preload = 'auto';
+      const hint = document.createElement('p');
+      hint.className = 'mistake-video-hint';
+      hint.textContent = 'Pierwsze uruchomienie może chwilę potrwać…';
+      video.addEventListener('canplay', () => hint.setAttribute('hidden', ''), { once: true });
+      wrap.appendChild(video);
+      wrap.appendChild(hint);
+    }
+    wrap.dataset.loaded = '1';
+  }
+
+  wrap.removeAttribute('hidden');
+  btn.classList.add('expanded');
+}
 
 function renderMistakes() {
   const list = el('mistakes-list');
@@ -238,11 +282,17 @@ function renderMistakes() {
       : m.question;
 
     const timeStr = m.timestamp ? formatRelativeTime(m.timestamp) : '';
+    const mediaEmoji = m.media ? (m.mediaType === 'video' ? '📹' : '🖼️') : '';
+    const mediaBtn = m.media
+      ? `<button class="mistake-media-btn" data-media="${m.media}" data-media-type="${m.mediaType}" title="Pokaż media">${mediaEmoji}</button>`
+      : '';
+
     li.innerHTML = `
-      <div class="mistake-meta">Pytanie ${m.number}${timeStr ? ` · <span class="mistake-time">${timeStr}</span>` : ''}</div>
+      <div class="mistake-meta">Pytanie ${m.number}${timeStr ? ` · <span class="mistake-time">${timeStr}</span>` : ''}${mediaBtn}</div>
       <div>${truncated}</div>
       <div class="mistake-given">Twoja odpowiedź: ${ANSWER_LABELS[m.userAnswer]}</div>
       <div class="mistake-correct">✓ Poprawna: ${ANSWER_LABELS[m.correctAnswer]}</div>
+      <div class="mistake-media-wrap" hidden></div>
     `;
     list.appendChild(li);
   }
@@ -302,6 +352,12 @@ function init() {
   el('next-btn').addEventListener('click', fetchQuestion);
   el('mistakes-header').addEventListener('click', toggleMistakes);
   el('reset-btn').addEventListener('click', resetStats);
+
+  // Event delegation for media spoiler buttons inside the mistakes list
+  el('mistakes-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('.mistake-media-btn');
+    if (btn) toggleMistakeMedia(btn);
+  });
 
   fetchQuestion();
 }
