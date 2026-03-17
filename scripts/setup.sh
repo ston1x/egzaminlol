@@ -5,7 +5,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SOURCE="$ROOT/tmp"
+SOURCE="$ROOT/source"
 
 echo "==> egzaminlol setup"
 echo "    Project root: $ROOT"
