@@ -31,11 +31,20 @@ async function main() {
   const colCount = ws.columnCount;
   const lines = [];
 
+  // RFC 4180 CSV escaping with ";" delimiter:
+  // wrap in quotes if value contains the delimiter, a quote, or a newline
+  function csvCell(raw) {
+    const s = String(raw ?? '').replace(/\r/g, '');
+    if (s.includes(';') || s.includes('"') || s.includes('\n')) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
   ws.eachRow({ includeEmpty: true }, (row) => {
     const cells = [];
     for (let i = 1; i <= colCount; i++) {
-      const val = String(row.getCell(i).text ?? '').replace(/[\n\r]/g, ' ');
-      cells.push(val);
+      cells.push(csvCell(row.getCell(i).text));
     }
     lines.push(cells.join(';'));
   });
