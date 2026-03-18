@@ -41,16 +41,20 @@ mkdir -p "$SOURCE/pjm"
 
 cd "$SOURCE"
 
+# gov.pl attachment URLs require browser-like headers to return the actual file
+# rather than an HTML redirect page
+WGET="wget -q --show-progress --user-agent=Mozilla/5.0 --content-disposition"
+
 echo "==> Downloading question catalogue (xlsx)..."
-wget -q --show-progress -O katalog.xlsx \
+$WGET -O katalog.xlsx \
   "https://www.gov.pl/attachment/048efa83-ab53-48df-be75-45d71dc53721"
 
 echo "==> Downloading multimedia part 1 (~8 GB)..."
-wget -q --show-progress -O multimedia_do_pytan.zip \
+$WGET -O multimedia_do_pytan.zip \
   "https://www.gov.pl/pliki/mi/multimedia_do_pytan.zip"
 
 echo "==> Downloading multimedia part 2..."
-wget -q --show-progress -O multimedia_do_pytan_cz2.zip \
+$WGET -O multimedia_do_pytan_cz2.zip \
   "https://www.gov.pl/attachment/546279d3-2586-41e2-8912-3f5cab98d31d"
 
 # Temporarily commented until figured out
@@ -62,14 +66,14 @@ wget -q --show-progress -O multimedia_do_pytan_cz2.zip \
 
 echo ""
 echo "==> Unzipping multimedia part 1..."
-unzip -q -o multimedia_do_pytan.zip -d "multimedia"
+unzip -q -j -o multimedia_do_pytan.zip -d "multimedia"
 
 echo "==> Unzipping multimedia part 2..."
-unzip -q -o multimedia_do_pytan_cz2.zip -d "multimedia_cz2"
+unzip -q -j -o multimedia_do_pytan_cz2.zip -d "multimedia_cz2"
 
 # Temporarily commented until figured out
 # echo "==> Unzipping sign language videos..."
-# unzip -q -o pytania_tlumaczenia_migowe.zip -d "pjm"
+# unzip -q -j -o pytania_tlumaczenia_migowe.zip -d "pjm"
 
 # ── Convert xlsx → CSV ────────────────────────────────────────
 

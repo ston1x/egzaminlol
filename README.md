@@ -47,13 +47,26 @@ npm install
 
 ## Running
 
+### Simplest run
+
 ```bash
 npm start
 ```
 
+### pm2 alternative (more persistent, no systemd/docker overhead):
+
+```bash
+npm install -g pm2
+pm2 start server/index.js --name egzaminlol
+pm2 startup    # prints a command to run for boot persistence
+pm2 save
+```
+
 Then open **http://localhost:3000** in your browser.
 
-Videos are transcoded from WMV to MP4 on first access (may take a few seconds) and cached in `cache/`. Subsequent plays are instant.
+---
+
+Note: Videos are transcoded from WMV to MP4 on first access (may take a few seconds) and cached in `cache/`. Subsequent plays are instant.
 
 ## Notes
 
