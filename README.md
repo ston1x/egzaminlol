@@ -28,15 +28,15 @@ The script downloads all files from [gov.pl](https://www.gov.pl/web/infrastruktu
 
 ```
 source/
-├── katalog-Table 1.csv                          # converted from xlsx (sheet "katalog", ";" separator)
-├── multimedia do pytań/                         # unzipped multimedia_do_pytan.zip (~8 GB)
+├── katalog.csv          # converted from xlsx (sheet "katalog", ";" separator)
+├── multimedia/          # unzipped multimedia_do_pytan.zip (~8 GB)
 │   ├── *.jpg
 │   └── *.wmv
-├── cz. 2/                                       # unzipped part 2 attachment (~small)
+├── multimedia_cz2/      # unzipped part 2 attachment
 │   ├── *.jpg
 │   └── *.wmv
-└── Pytania egzaminacyjne na prawo jazdy - tłumaczenia migowe 2025/
-    └── *.wmv                                    # sign language videos (not used yet)
+└── pjm/                 # sign language videos (not used yet)
+    └── *.wmv
 ```
 
 ## Installation

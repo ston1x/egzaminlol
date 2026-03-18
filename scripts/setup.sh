@@ -33,9 +33,9 @@ npm install --prefix "$ROOT" --silent
 # ── Directory setup ─────────────────────────────────────────
 
 mkdir -p "$SOURCE"
-mkdir -p "$SOURCE/multimedia do pytań"
-mkdir -p "$SOURCE/cz. 2"
-mkdir -p "$SOURCE/Pytania egzaminacyjne na prawo jazdy - tłumaczenia migowe 2025"
+mkdir -p "$SOURCE/multimedia"
+mkdir -p "$SOURCE/multimedia_cz2"
+mkdir -p "$SOURCE/pjm"
 
 # ── Download ─────────────────────────────────────────────────
 
@@ -62,15 +62,14 @@ wget -q --show-progress -O multimedia_do_pytan_cz2.zip \
 
 echo ""
 echo "==> Unzipping multimedia part 1..."
-unzip -q -o multimedia_do_pytan.zip -d "multimedia do pytań"
+unzip -q -o multimedia_do_pytan.zip -d "multimedia"
 
 echo "==> Unzipping multimedia part 2..."
-unzip -q -o multimedia_do_pytan_cz2.zip -d "cz. 2"
+unzip -q -o multimedia_do_pytan_cz2.zip -d "multimedia_cz2"
 
 # Temporarily commented until figured out
 # echo "==> Unzipping sign language videos..."
-# unzip -q -o pytania_tlumaczenia_migowe.zip \
-#   -d "Pytania egzaminacyjne na prawo jazdy - tłumaczenia migowe 2025"
+# unzip -q -o pytania_tlumaczenia_migowe.zip -d "pjm"
 
 # ── Convert xlsx → CSV ────────────────────────────────────────
 

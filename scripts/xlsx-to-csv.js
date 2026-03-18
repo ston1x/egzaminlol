@@ -10,7 +10,7 @@ const fs = require('fs');
 
 const sourceDir = process.argv[2] || path.join(__dirname, '..', 'source');
 const xlsxPath = path.join(sourceDir, 'katalog.xlsx');
-const csvPath = path.join(sourceDir, 'katalog-Table 1.csv');
+const csvPath = path.join(sourceDir, 'katalog.csv');
 
 if (!fs.existsSync(xlsxPath)) {
   console.error(`ERROR: File not found: ${xlsxPath}`);

@@ -7,8 +7,8 @@ const { spawn } = require('child_process');
 const { getQuestions, getRandomQuestion, getQuestionByNumber } = require('./questions');
 
 const MEDIA_DIRS = [
-  path.join(__dirname, '..', 'source', 'multimedia do pytań'),
-  path.join(__dirname, '..', 'source', 'cz. 2'),
+  path.join(__dirname, '..', 'source', 'multimedia'),
+  path.join(__dirname, '..', 'source', 'multimedia_cz2'),
 ];
 const CACHE_DIR = path.join(__dirname, '..', 'cache');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
