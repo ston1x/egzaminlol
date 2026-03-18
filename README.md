@@ -6,11 +6,7 @@ Free, self-hosted Polish driving theory exam practice app (Category B).
 
 - **Node.js** v18+
 - **ffmpeg** — required for WMV video playback (`brew install ffmpeg` on macOS)
-- The official source files from [gov.pl](https://www.gov.pl/web/infrastruktura/prawo-jazdy) placed in `source/`:
-
-```
-wget https://www.gov.pl/attachment/048efa83-ab53-48df-be75-45d71dc53721; wget https://www.gov.pl/pliki/mi/multimedia_do_pytan.zip; wget https://www.gov.pl/attachment/546279d3-2586-41e2-8912-3f5cab98d31d; wget https://www.gov.pl/pliki/mi/pytania_egzaminacyjne_na_prawo_jazdy_tlumaczenia_migowe_12_2025.zip
-```
+- The official source files from [gov.pl](https://www.gov.pl/web/infrastruktura/prawo-jazdy) placed in `source/` (download commands and dir structure is mentioned below under the *Manual setup* section
 
 ## Source files setup
 
@@ -25,6 +21,10 @@ bash scripts/setup.sh
 The script downloads all files from [gov.pl](https://www.gov.pl/web/infrastruktura/prawo-jazdy), unzips them, and converts the xlsx catalogue to CSV. Requires `wget`, `unzip`, and `node` (already needed to run the app).
 
 **Manual setup** — download and arrange like this:
+
+```bash
+wget https://www.gov.pl/attachment/048efa83-ab53-48df-be75-45d71dc53721; wget https://www.gov.pl/pliki/mi/multimedia_do_pytan.zip; wget https://www.gov.pl/attachment/546279d3-2586-41e2-8912-3f5cab98d31d; wget https://www.gov.pl/pliki/mi/pytania_egzaminacyjne_na_prawo_jazdy_tlumaczenia_migowe_12_2025.zip
+```
 
 ```
 source/
